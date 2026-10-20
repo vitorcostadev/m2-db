@@ -39,7 +39,6 @@ WHERE
         AND v.data <= '2026-12-31';
 
 # D. Retorne todos os produtos que não tiveram vendas realizadas no último mês.
-# Ultimo mes em nossa DB: 09 (Setembro)
                                 
 SELECT 
     p.id, p.description, p.price
@@ -61,7 +60,10 @@ FROM
 	Vendedor vv
 		LEFT JOIN
 	Venda v ON v.vendedor_idx = vv.matricula
-    AND v.data >= DATE_SUB(CURRENT_DATE(), INTERVAL 20 DAY)
+    AND v.data >= DATE_SUB(
+        (SELECT MAX(v2.data) FROM Venda v2),
+        INTERVAL 20 DAY
+    )
 WHERE
 	v.vendedor_idx is NULL
 ;
